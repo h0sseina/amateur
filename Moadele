@@ -1,0 +1,19 @@
+from sympy import symbols, solve
+# تعریف متغیرها
+x = symbols('x')
+
+# ورودی‌گیری از کاربر برای ضرایب معادله
+a = float(input("ضریب a را وارد کنید: "))
+b = float(input("ضریب b را وارد کنید: "))
+c = float(input("ضریب c را وارد کنید: "))
+
+# تعریف معادله
+equation = a*x**2 + b*x + c
+
+# حل معادله
+solutions = solve(equation, x)
+
+# نمایش جواب‌ها
+print("جواب‌ها:")
+for solution in solutions:
+    print(solution)
