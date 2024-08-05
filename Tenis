@@ -1,0 +1,73 @@
+import pygame
+import sys
+
+# تنظیمات اولیه
+pygame.init()
+
+# ابعاد صفحه
+WIDTH, HEIGHT = 800, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Tennis Game")
+
+# رنگ‌ها
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
+# مشخصات پدال و توپ
+PADDLE_WIDTH, PADDLE_HEIGHT = 10, 100
+BALL_SIZE = 15
+
+# موقعیت پدال‌ها و توپ
+player1_pos = [30, HEIGHT // 2 - PADDLE_HEIGHT // 2]
+player2_pos = [WIDTH - 40, HEIGHT // 2 - PADDLE_HEIGHT // 2]
+ball_pos = [WIDTH // 2, HEIGHT // 2]
+ball_vel = [5, 5]
+
+# حلقه اصلی بازی
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    keys = pygame.key.get_pressed()
+    
+    # کنترل پدال‌ها
+    if keys[pygame.K_w] and player1_pos[1] > 0:
+        player1_pos[1] -= 5
+    if keys[pygame.K_s] and player1_pos[1] < HEIGHT - PADDLE_HEIGHT:
+        player1_pos[1] += 5
+    if keys[pygame.K_UP] and player2_pos[1] > 0:
+        player2_pos[1] -= 5
+    if keys[pygame.K_DOWN] and player2_pos[1] < HEIGHT - PADDLE_HEIGHT:
+        player2_pos[1] += 5
+
+    # حرکت توپ
+    ball_pos[0] += ball_vel[0]
+    ball_pos[1] += ball_vel[1]
+
+    # برخورد توپ با دیواره‌ها
+    if ball_pos[1] <= 0 or ball_pos[1] >= HEIGHT - BALL_SIZE:
+        ball_vel[1] = -ball_vel[1]
+
+    # برخورد توپ با پدال‌ها
+    if (player1_pos[0] < ball_pos[0] < player1_pos[0] + PADDLE_WIDTH and 
+        player1_pos[1] < ball_pos[1] < player1_pos[1] + PADDLE_HEIGHT) or \
+       (player2_pos[0] < ball_pos[0] < player2_pos[0] + PADDLE_WIDTH and 
+        player2_pos[1] < ball_pos[1] < player2_pos[1] + PADDLE_HEIGHT):
+        ball_vel[0] = -ball_vel[0]
+
+    # بازنشانی توپ در صورت برخورد با دیواره‌ها
+    if ball_pos[0] <= 0 or ball_pos[0] >= WIDTH - BALL_SIZE:
+        ball_pos = [WIDTH // 2, HEIGHT // 2]
+        ball_vel = [5, 5]
+
+    # رسم همه چیز
+    screen.fill(BLACK)
+    pygame.draw.rect(screen, WHITE, (*player1_pos, PADDLE_WIDTH, PADDLE_HEIGHT))
+    pygame.draw.rect(screen, WHITE, (*player2_pos, PADDLE_WIDTH, PADDLE_HEIGHT))
+    pygame.draw.ellipse(screen, WHITE, (*ball_pos, BALL_SIZE, BALL_SIZE))
+    
+    pygame.display.flip()
+    pygame.time.delay(30)
+#بازی تنیس به زبان پایتون
